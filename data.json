@@ -1,0 +1,47 @@
+[
+    {
+        "blockID": "0",
+        "owner": "chanchai manmueang",
+        "address": "123/1",
+        "sub_district": "Suranaree",
+        "district": "Mueang",
+        "province": "Nakhon Ratchasima",
+        "title_deed_number": "42568",
+        "land_size": "100",
+        "floor_area": "263",
+        "detail": "2 booths, 3 floors",
+        "year_built": "2000",
+        "prv_block_hash": "Commercial Building",
+        "block_hash": "b97e71a413769cb2e1ef28ec1b4d92d76aebb431e21fc67aac980fde54fcfe2c"
+    },
+    {
+        "blockID": "1",
+        "prv_block_hash": "b97e71a413769cb2e1ef28ec1b4d92d76aebb431e21fc67aac980fde54fcfe2c",
+        "block_hash": "1ccab73e6f70e11d77abd17bfd8506de626a6efc692db9ca7f58a6c827c1f6ea",
+        "address": "123/2",
+        "owner": "Kanjana Homdum",
+        "sub_district": "Suranaree",
+        "district": "Mueang",
+        "province": "Nakhon Ratchasima",
+        "title_deed_number": "42569",
+        "land_size": "50",
+        "floor_area": "120",
+        "detail": "1 boots, 3 floors",
+        "year_built": "2000"
+    },
+    {
+        "blockID": "2",
+        "prv_block_hash": "1ccab73e6f70e11d77abd17bfd8506de626a6efc692db9ca7f58a6c827c1f6ea",
+        "block_hash": "34dab5c816f22c9c50e53042f7be9e87b38fa82c21b469d771253499e3755552",
+        "address": "64/5",
+        "owner": "Kanjana Homdum",
+        "sub_district": "Banjun",
+        "district": "Mueang",
+        "province": "Nakhon Ratchasima",
+        "title_deed_number": "86452",
+        "land_size": "63",
+        "floor_area": "96",
+        "detail": "1 booth, 2 floors",
+        "year_built": "2022"
+    }
+]
