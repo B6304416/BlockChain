@@ -5,12 +5,13 @@ import os
 # class ของ CommercialBuildingBlock ระบุรายละเอียดของอาคารพาณิชย์
 class CommercialBuildingBlock:
     def __init__(
-        self, blockID, owner, address, sub_district, district, province, title_deed_number, 
+        self, blockID, owner, house_number, village_number, sub_district, district, province, title_deed_number, 
         land_size, floor_area, detail, year_built, prv_block_hash
     ) :
         self.blockID = blockID
         self.owner = owner
-        self.address = address
+        self.house_number = house_number
+        self.village_number = village_number
         self.sub_district = sub_district
         self.district = district
         self.province = province
@@ -27,7 +28,8 @@ class CommercialBuildingBlock:
         sha = hashlib.sha256()
         sha.update(str(self.blockID).encode('utf-8') + 
                    str(self.owner).encode('utf-8') + 
-                   str(self.address).encode('utf-8') + 
+                   str(self.house_number).encode('utf-8') + 
+                   str(self.village_number).encode('utf-8') + 
                    str(self.sub_district).encode('utf-8') + 
                    str(self.district).encode('utf-8') + 
                    str(self.province).encode('utf-8') + 
@@ -42,10 +44,11 @@ class CommercialBuildingBlock:
 # บันทึกข้อมูลลง block
 def record_data():
     inputOwner = input("ชื่อเจ้าของ/owner: ")
-    inputProvince = input("จังหวัด/province: ")
-    inputDistrict = input("อำเภอ/district: ")
+    inputHouseNumber = input("บ้านเลขที่/house No.: ")
+    inputVillageNumber = input("หมู่/village No.: ")
     inputSubDistrict = input("ตำบล/sub district: ")
-    inputAddress = input("บ้านเลขที่/address: ")
+    inputDistrict = input("อำเภอ/district: ")
+    inputProvince = input("จังหวัด/province: ")
     inputTitleDeedNumber = input("เลขโฉนดที่ดิน/title deed number: ")
     inputLandSize = input("ขนาดที่ดิน/land size (km^2): ")
     inputFloorArea = input("พื้นที่ใช้สอย/floor area (km^2): ")
@@ -53,7 +56,7 @@ def record_data():
     inputYearBuilt = input("ปีที่สร้างเสร็จ/year built: ")
 
     currentBlock = CommercialBuildingBlock(
-        blockID, inputOwner, inputAddress, inputSubDistrict, inputDistrict, inputProvince, 
+        blockID, inputOwner, inputHouseNumber, inputVillageNumber, inputSubDistrict, inputDistrict, inputProvince, 
         inputTitleDeedNumber, inputLandSize, inputFloorArea, inputDetail, inputYearBuilt, prv_hash
     )
     j = open("data.json", "w")
@@ -61,7 +64,8 @@ def record_data():
     pr = "\"prv_block_hash\": \"" + prv_hash + "\","
     bh = "\"block_hash\": \"" + currentBlock.block_hash + "\","
     ow = "\"owner\": \"" + inputOwner + "\","
-    ad = "\"address\": \"" + inputAddress + "\","
+    hn = "\"house_number\": \"" + inputHouseNumber + "\","
+    vn = "\"village_number\": \"" + inputVillageNumber + "\","
     sd = "\"sub_district\": \"" + inputSubDistrict + "\","
     di = "\"district\": \"" + inputDistrict + "\","
     pv = "\"province\": \"" + inputProvince + "\","
@@ -70,27 +74,27 @@ def record_data():
     fa = "\"floor_area\": \"" + inputFloorArea + "\","
     dt = "\"detail\": \"" + inputDetail + "\","
     yb = "\"year_built\": \"" + inputYearBuilt + "\"}"
-    blockchain_data = json.loads(bid+pr+bh+ad+ow+sd+di+pv+td+ls+fa+dt+yb)
+    blockchain_data = json.loads(bid+pr+bh+ow+hn+vn+sd+di+pv+td+ls+fa+dt+yb)
     jsonData.append(blockchain_data)
     json.dump(jsonData, j, sort_keys=False, indent=4)
-
 
 
 # function สร้าง genesis_block
 def genesis_block():
     inputOwner = input("ชื่อเจ้าของ/owner: ")
-    inputProvince = input("จังหวัด/province: ")
-    inputDistrict = input("อำเภอ/district: ")
+    inputHouseNumber = input("บ้านเลขที่/house No.: ")
+    inputVillageNumber = input("หมู่/village No.: ")
     inputSubDistrict = input("ตำบล/sub district: ")
-    inputAddress = input("บ้านเลขที่/address: ")
+    inputDistrict = input("อำเภอ/district: ")
+    inputProvince = input("จังหวัด/province: ")
     inputTitleDeedNumber = input("เลขโฉนดที่ดิน/title deed number: ")
     inputLandSize = input("ขนาดที่ดิน/land size (km^2): ")
     inputFloorArea = input("พื้นที่ใช้สอย/floor area (km^2): ")
     inputDetail = input("ลักษณะอาคาร/detail: ")
     inputYearBuilt = input("ปีที่สร้างเสร็จ/year built: ")
 
-    currentBlock = CommercialBuildingBlock(fID, inputOwner, inputAddress, inputSubDistrict, inputDistrict, inputProvince, 
-        inputTitleDeedNumber, inputLandSize, inputFloorArea, inputDetail, inputYearBuilt, "Commercial Building")
+    currentBlock = CommercialBuildingBlock(fID, inputOwner, inputHouseNumber, inputVillageNumber, inputSubDistrict, inputDistrict, 
+        inputProvince, inputTitleDeedNumber, inputLandSize, inputFloorArea, inputDetail, inputYearBuilt, "Commercial Building")
     j = open("data.json", "w")
     blockchain_data = [currentBlock.__dict__]
     json.dump(blockchain_data, j, sort_keys=False, indent=4)
@@ -103,7 +107,7 @@ def update_block_hash():
         for item in jsonData:
             if ID in item and item[ID] == current_block:
                 block_data = (
-                    item["blockID"] + item["owner"] + item["address"] + item["sub_district"] +
+                    item["blockID"] + item["owner"] + item["house_number"] + item["village_number"] + item["sub_district"] +
                     item["district"] + item["province"] + item["title_deed_number"] + item["land_size"] +
                     item["floor_area"] + item["detail"] + item["year_built"] + item["prv_block_hash"]
                 )
@@ -120,7 +124,7 @@ def data_verification():
         if prevent_block["prv_block_hash"] != current_block["block_hash"]:
             print("\nInvalid!!!! blockID: " + current_block["blockID"])
             print("block_hash    (blockID "+current_block["blockID"]+ "): " + current_block["block_hash"])
-            print("prevent_block (blockID "+prevent_block["blockID"]+ "): " + prevent_block["prv_block_hash0"])
+            print("prevent_block (blockID "+prevent_block["blockID"]+ "): " + prevent_block["prv_block_hash"])
             print("")
             return False
     return 
@@ -129,16 +133,39 @@ def data_verification():
 def find_building():
     name = input("owner name: ")
     value = "owner"
+    found = False
+    num = 1
     for item in jsonData:
         if value in item and item[value] == name:
-            print("\n"+name+"'s commercial building")
-            print(f"BlockID: {item['blockID']}")
+            print("")
+            print(str(num)+". "+ f"BlockID: {item['blockID']}")
             print(f"Owned by: {item['owner']}")
-            print(f"Address: {item['address']} {item['sub_district']} {item['district']} {item['province']}")
+            print(f"Address: {item['house_number']} Moo.{item['village_number']}, {item['sub_district']}, {item['district']}, {item['province']}")
             print(f"Detail: {item['detail']}")
             print(f"Floor area: {item['floor_area']} km^2")
             print("")
-    else:
+            num += 1
+            found = True
+    if not found:
+        print("Can't find this person's commercial building.")
+
+# ค้นหาข้อมูลอาคารพาณิชย์จากชื่อ
+def find_owner():
+    house = input("House No.: ")
+    deed = input("Title deed No.: ")
+    valueh = "house_number"
+    valued = "title_deed_number"
+    found = False
+    num = 1
+    for item in jsonData:
+        if item[valueh] == house and item[valued] == deed:
+            print("")
+            print(str(num)+". "+ f"BlockID: {item['blockID']}")
+            print(f"Owned by: {item['owner']}")
+            print("")
+            found = True
+            num += 1
+    if not found:
         print("Can't find this person's commercial building.")
 
 # main
@@ -163,14 +190,17 @@ while True :
     data_verification()
 
     print("Please select an item")
-    print("press 1 to record Commercial Building.")
-    print("press 2 to Find a commercial building owner.")
+    print("press 1 to record commercial building.")
+    print("press 2 to Find a commercial building.")
+    print("press 3 to Find a commercial building trading history.")
     print("press 0 to exit")
     x = input()
     if x == "1":
         record_data()
     elif x == "2":
         find_building()
+    elif x == "3":
+        find_owner()
     elif x == "0":
         print("finish")
         break
