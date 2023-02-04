@@ -132,22 +132,32 @@ def data_verification():
 # ค้นหาข้อมูลอาคารพาณิชย์จากชื่อ
 def find_building():
     name = input("owner name: ")
-    value = "owner"
     found = False
     num = 1
     for item in jsonData:
-        if value in item and item[value] == name:
-            print("")
-            print(str(num)+". "+ f"BlockID: {item['blockID']}")
-            print(f"Owned by: {item['owner']}")
-            print(f"Address: {item['house_number']} Moo.{item['village_number']}, {item['sub_district']}, {item['district']}, {item['province']}")
-            print(f"Detail: {item['detail']}")
-            print(f"Floor area: {item['floor_area']} km^2")
-            print("")
-            num += 1
-            found = True
+        if item.get("owner") == name:
+            latest = True
+            for check in jsonData:
+                if (item["house_number"] == check["house_number"] and
+                    item["title_deed_number"] == check["title_deed_number"]):
+                    if item["blockID"] < check["blockID"]:
+                        latest = False
+                        print(item["blockID"] +"<"+ check["blockID"])
+                        break
+            if latest:
+                found = True
+                print("")
+                print(f"{num}. BlockID: {item['blockID']}")
+                print(f"Owned by: {item['owner']}")
+                print(f"Address: {item['house_number']} Moo.{item['village_number']}, {item['sub_district']}, {item['district']}, {item['province']}")
+                print(f"Detail: {item['detail']}")
+                print(f"Floor area: {item['floor_area']} km^2")
+                print("")
+                num += 1
     if not found:
         print("Can't find this person's commercial building.")
+        print("")
+
 
 # ค้นหาข้อมูลอาคารพาณิชย์จากชื่อ
 def find_owner():
@@ -167,6 +177,7 @@ def find_owner():
             num += 1
     if not found:
         print("Can't find this person's commercial building.")
+        print("")
 
 # main
 # เช็ค block ใน json
