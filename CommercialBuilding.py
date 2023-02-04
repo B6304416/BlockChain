@@ -76,7 +76,7 @@ def record_data():
 
 
 
-# function สร้าง Commercial Building
+# function สร้าง genesis_block
 def genesis_block():
     inputOwner = input("ชื่อเจ้าของ/owner: ")
     inputProvince = input("จังหวัด/province: ")
@@ -95,28 +95,38 @@ def genesis_block():
     blockchain_data = [currentBlock.__dict__]
     json.dump(blockchain_data, j, sort_keys=False, indent=4)
 
-# function ยืนยันข้อมูลทั้งหมดใน blockchain
-def data_verification():
-    for i in range(1, len(jsonData)):
-        current_block = jsonData[i]
+# function hash ข้อมูลทั้งหมดใน blockchain
+def update_block_hash():
+    for i in range(0, len(jsonData)-1):
         ID = "blockID"
-        value = str(i-1)
+        current_block = str(i)
         for item in jsonData:
-            if ID in item and item[ID] == value:
+            if ID in item and item[ID] == current_block:
                 block_data = (
                     item["blockID"] + item["owner"] + item["address"] + item["sub_district"] +
                     item["district"] + item["province"] + item["title_deed_number"] + item["land_size"] +
                     item["floor_area"] + item["detail"] + item["year_built"] + item["prv_block_hash"]
                 )
-                if current_block["prv_block_hash"] != hashlib.sha256(block_data.encode()).hexdigest():
-                    print("Invalid!!!! blockID: " + item["blockID"])
-                    print("digest on current data   :" + current_block["prv_block_hash"])
-                    print("digest after change :" + hashlib.sha256(block_data.encode()).hexdigest())
-                    return False
+                item["block_hash"] = hashlib.sha256(block_data.encode()).hexdigest()
+    with open('data.json', 'w') as json_file:
+        json.dump(jsonData, json_file, indent=4)
+    return 
+
+# function ยืนยันข้อมูลทั้งหมดใน blockchain
+def data_verification():
+    for i in range(0, len(jsonData)-1):
+        current_block = jsonData[i]
+        prevent_block = jsonData[i+1]
+        if prevent_block["prv_block_hash"] != current_block["block_hash"]:
+            print("\nInvalid!!!! blockID: " + current_block["blockID"])
+            print("block_hash    (blockID "+current_block["blockID"]+ "): " + current_block["block_hash"])
+            print("prevent_block (blockID "+prevent_block["blockID"]+ "): " + prevent_block["prv_block_hash0"])
+            print("")
+            return False
     return 
 
 # ค้นหาข้อมูลอาคารพาณิชย์จากชื่อ
-def search_by_owner():
+def find_building():
     name = input("owner name: ")
     value = "owner"
     for item in jsonData:
@@ -131,13 +141,12 @@ def search_by_owner():
     else:
         print("Can't find this person's commercial building.")
 
-# โปรแกรมเริ่มรันตรงนี้ (:
-# เริ่มจากเช็คก่อนว่าเคยมี block มาก่อนรึเปล่า
-# ถ้าเคยมี block ก่อนหน้านี้ก็สร้าง block ต่อไปตามปกติ
+# main
+# เช็ค block ใน json
 if os.path.exists("data.json"): 
     with open("data.json", "r") as file:
         jsonData = json.load(file)
-# ถ้าไม่เคยมี block มาก่อนต้องเริ่มจากสร้าง genesis block
+# ถ้าไม่มี block มาก่อนต้องเริ่มจากสร้าง genesis block
 else:
     print("START CREATE FIRST THE BLOCK")
     prv_hash = "Commercial Building"
@@ -150,26 +159,18 @@ while True :
     for item in jsonData:
         prv_hash = item["block_hash"]
         blockID = str(int(item["blockID"]) + 1)
+    update_block_hash()
+    data_verification()
+
     print("Please select an item")
     print("press 1 to record Commercial Building.")
-    print("press 2 to check Data Verification.")
-    print("press 3 to Find a commercial building owner.")
+    print("press 2 to Find a commercial building owner.")
     print("press 0 to exit")
     x = input()
     if x == "1":
-        data_verification()
         record_data()
     elif x == "2":
-        if data_verification():
-            print("\nblockchain data is valid\n*************************")
-        else:
-            print("blockchain data is invalid\n*************************")
-    
-    
-    elif x == "3":
-        data_verification()
-        search_by_owner()
-    
+        find_building()
     elif x == "0":
         print("finish")
         break
