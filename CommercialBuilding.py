@@ -113,7 +113,7 @@ def data_verification():
                     print("digest on current data   :" + current_block["prv_block_hash"])
                     print("digest after change :" + hashlib.sha256(block_data.encode()).hexdigest())
                     return False
-    return True
+    return 
 
 # ค้นหาข้อมูลอาคารพาณิชย์จากชื่อ
 def search_by_owner():
